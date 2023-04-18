@@ -6,7 +6,6 @@ from llama_index import (
     ServiceContext
 )
 from langchain import OpenAI
-# from llama_index import GPTSimpleVectorIndex, SimpleDirectoryReader
 import openai
 from dotenv import load_dotenv
 from os import getenv
@@ -15,6 +14,7 @@ from textwrap import wrap
 
 class IndexQuery:
     def __init__(self, directory_path: str):
+        self.directory_path = directory_path
         load_dotenv()
         openai.api_key = getenv("OPENAI_API_KEY")
         # set maximum input size
@@ -45,14 +45,21 @@ class IndexQuery:
             llm_predictor=llm_predictor,
             prompt_helper=prompt_helper
         )
-        self.index = GPTSimpleVectorIndex.from_documents(
+        index = GPTSimpleVectorIndex.from_documents(
             documents,
             service_context=service_context
         )
-        self.index.save_to_disk('index.json')
+        index.save_to_disk('index.json')
+        self.vector_index = GPTSimpleVectorIndex.load_from_disk('index.json')
+
+
+
+    def __str__(self) -> str:
+        return f"IndexQuery(\"{self.directory_path}\")"
 
     def ask(self, question: str) -> str:
-        return self.index.query(question)
+        return self.vector_index.query(question).response
+
 
 if __name__ == "__main__":
     pass
