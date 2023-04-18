@@ -5,19 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DataChat</title>
     <style>
+        html {
+            height: 100%;
+        }
         body {
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
             margin: 0;
+            padding: 0;
+            height: 90%;
+            width: 100%;
         }
         .container {
             display: flex;
+            flex-direction: column;
             width: 80%;
             height: 80%;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: 100%;
+            width: 100%;
+        }
+        .header {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        .content {
+            display: flex;
+            height: 100%;
         }
         .chatbot {
             width: 60%;
@@ -33,6 +50,7 @@
         }
         .file-drop {
             width: 40%;
+            height: 100%;
             background-color: #fff;
             padding: 1rem;
             display: flex;
@@ -60,21 +78,24 @@
 </head>
 <body>
     <div class="container">
-        <div class="chatbot">
-            <div class="chat-content">
-                <div id="chatbox">
-                    <!-- Chat messages are appended here -->
+        <div class="header">DataChat</div>
+        <div class="content">
+            <div class="chatbot">
+                <div class="chat-content">
+                    <div id="chatbox">
+                        <!-- Chat messages are appended here -->
+                    </div>
                 </div>
+                <form id="chat-form">
+                    <textarea id="user-input" placeholder="Type your message..." autocomplete="off" required rows="4" cols="40"></textarea>
+                    <button type="submit">Send</button>
+                </form>
             </div>
-            <form id="chat-form">
-                <textarea id="user-input" placeholder="Type your message..." autocomplete="off" required rows="4" cols="40"></textarea>
-                <button type="submit">Send</button>
-            </form>
-        </div>
-        <div class="file-drop">
-            <input type="file" id="fileInput" multiple accept=".pdf,.epub,.txt,.docx,.html">
-            <label for="fileInput">Drop files here or click to upload</label>
-            <ul class="file-list"></ul>
+            <div class="file-drop">
+                <input type="file" id="fileInput" multiple accept=".pdf,.epub,.txt,.docx,.html">
+                <label for="fileInput">Drop files here or click to upload</label>
+                <ul class="file-list"></ul>
+            </div>
         </div>
     </div>
     <script>
@@ -166,3 +187,178 @@
     </script>
 </body>
 </html>
+
+
+
+
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>DataChat</title>-->
+<!--    <style>-->
+<!--        body {-->
+<!--            font-family: Arial, sans-serif;-->
+<!--            display: flex;-->
+<!--            justify-content: center;-->
+<!--            align-items: center;-->
+<!--            height: 100vh;-->
+<!--            margin: 0;-->
+<!--        }-->
+<!--        .container {-->
+<!--            display: flex;-->
+<!--            width: 80%;-->
+<!--            height: 80%;-->
+<!--            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);-->
+<!--        }-->
+<!--        .chatbot {-->
+<!--            width: 60%;-->
+<!--            background-color: #f6f6f6;-->
+<!--            padding: 1rem;-->
+<!--            display: flex;-->
+<!--            flex-direction: column;-->
+<!--            height: 100%;-->
+<!--        }-->
+<!--        .chat-content {-->
+<!--            flex: 1;-->
+<!--            overflow-y: auto;-->
+<!--        }-->
+<!--        .file-drop {-->
+<!--            width: 40%;-->
+<!--            background-color: #fff;-->
+<!--            padding: 1rem;-->
+<!--            display: flex;-->
+<!--            flex-direction: column;-->
+<!--            align-items: center;-->
+<!--            justify-content: center;-->
+<!--            border-left: 1px solid #e0e0e0;-->
+<!--            position: relative;-->
+<!--        }-->
+<!--        .file-drop input[type="file"] {-->
+<!--            display: none;-->
+<!--        }-->
+<!--        .file-drop label {-->
+<!--            padding: 1rem;-->
+<!--            background-color: #e0e0e0;-->
+<!--            border-radius: 5px;-->
+<!--            cursor: pointer;-->
+<!--        }-->
+<!--        .file-list {-->
+<!--            list-style-type: none;-->
+<!--            padding: 0;-->
+<!--            margin-top: 1rem;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--    <div class="container">-->
+<!--        <div class="chatbot">-->
+<!--            <div class="chat-content">-->
+<!--                <div id="chatbox">-->
+<!--                    &lt;!&ndash; Chat messages are appended here &ndash;&gt;-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <form id="chat-form">-->
+<!--                <textarea id="user-input" placeholder="Type your message..." autocomplete="off" required rows="4" cols="40"></textarea>-->
+<!--                <button type="submit">Send</button>-->
+<!--            </form>-->
+<!--        </div>-->
+<!--        <div class="file-drop">-->
+<!--            <input type="file" id="fileInput" multiple accept=".pdf,.epub,.txt,.docx,.html">-->
+<!--            <label for="fileInput">Drop files here or click to upload</label>-->
+<!--            <ul class="file-list"></ul>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <script>-->
+<!--        const fileInput = document.getElementById('fileInput');-->
+<!--        const fileList = document.querySelector('.file-list');-->
+<!--        const setFileItemStatus = (listItem, status) => {-->
+<!--            if (status === 'processing') {-->
+<!--                listItem.style.color = 'blue';-->
+<!--                listItem.textContent += ' (processing...)';-->
+<!--            } else if (status === 'processed') {-->
+<!--                listItem.style.color = 'green';-->
+<!--                listItem.textContent = listItem.textContent.replace(' (processing...)', ' (processed)');-->
+<!--            } else {-->
+<!--                listItem.style.color = 'red';-->
+<!--                listItem.textContent = listItem.textContent.replace(' (processing...)', ' (error)');-->
+<!--            }-->
+<!--        };-->
+<!--        const uploadFiles = async (files) => {-->
+<!--            const formData = new FormData();-->
+<!--            for (const file of files) {-->
+<!--                formData.append('files[]', file);-->
+<!--            }-->
+<!--            try {-->
+<!--                const response = await fetch('/upload', {-->
+<!--                    method: 'POST',-->
+<!--                    body: formData-->
+<!--                });-->
+<!--                const result = await response.json();-->
+<!--                for (const listItem of fileList.children) {-->
+<!--                    if (result.status === 'success') {-->
+<!--                        setFileItemStatus(listItem, 'processed');-->
+<!--                    } else {-->
+<!--                        setFileItemStatus(listItem, 'error');-->
+<!--                    }-->
+<!--                }-->
+<!--            } catch (error) {-->
+<!--                console.error('Error uploading the file:', error);-->
+<!--                for (const listItem of fileList.children) {-->
+<!--                    setFileItemStatus(listItem, 'error');-->
+<!--                }-->
+<!--            }-->
+<!--        };-->
+<!--        fileInput.addEventListener('change', (e) => {-->
+<!--            const files = e.target.files;-->
+<!--            for (const file of files) {-->
+<!--                const listItem = document.createElement('li');-->
+<!--                listItem.textContent = file.name;-->
+<!--                fileList.appendChild(listItem);-->
+<!--                setFileItemStatus(listItem, 'processing');-->
+<!--            }-->
+<!--            uploadFiles(files);-->
+<!--            fileInput.value = null;-->
+<!--        });-->
+<!--        const chatForm = document.getElementById('chat-form');-->
+<!--        const chatbox = document.getElementById('chatbox');-->
+<!--        function addMessageToChatbox(message, sender) {-->
+<!--            const messageElement = document.createElement('div');-->
+<!--            messageElement.className = sender === 'user' ? 'user-message' : 'bot-message';-->
+<!--            messageElement.innerHTML = `<p><strong>${sender === 'user' ? 'You' : 'Chatbot'}:</strong> ${message}</p>`;-->
+<!--            chatbox.appendChild(messageElement);-->
+<!--        }-->
+<!--        chatForm.addEventListener('submit', (e) => {-->
+<!--            e.preventDefault();-->
+<!--            const userInput = document.getElementById('user-input');-->
+<!--            const question = userInput.value;-->
+<!--            userInput.value = '';-->
+<!--            addMessageToChatbox(question, 'user');-->
+<!--            fetch('/query', {-->
+<!--                method: 'POST',-->
+<!--                headers: {-->
+<!--                    'Content-Type': 'application/x-www-form-urlencoded'-->
+<!--                },-->
+<!--                body: `question=${encodeURIComponent(question)}`-->
+<!--            })-->
+<!--            .then(response => response.json())-->
+<!--            .then(data => {-->
+<!--                if (data.status === 'success') {-->
+<!--                    addMessageToChatbox(data.response, 'bot');-->
+<!--                } else {-->
+<!--                    console.error(data.message);-->
+<!--                    addMessageToChatbox('An error occurred. Please try again.', 'bot');-->
+<!--                }-->
+<!--            })-->
+<!--            .catch(error => {-->
+<!--                console.error(error);-->
+<!--                addMessageToChatbox('An error occurred. Please try again.', 'bot');-->
+<!--            });-->
+<!--        });-->
+<!--    </script>-->
+<!--</body>-->
+<!--</html>-->
