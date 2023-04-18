@@ -23,7 +23,6 @@ temp_txt_dir = ""
 @app.route('/upload', methods=['POST'])
 def upload():
     if request.method == 'POST':
-        print("\n/UPLOAD\n")
         files = request.files.getlist('files[]')
         global temp_dir
         global temp_txt_dir
@@ -34,34 +33,17 @@ def upload():
                     file.save(file_path)
                     txt = FileToTXT(file_path)
                     txt.save_to_directory(temp_txt_dir)
-                print(f"    temp_dir=\"{temp_dir}\"")
-                print(f"        type={type(temp_dir)}")
-                print(f"      length={len(temp_dir)}")
-                print(f"temp_txt_dir=\"{temp_txt_dir}\"")
-                print(f"        type={type(temp_txt_dir)}")
-                print(f"      length={len(temp_txt_dir)}")
-                print("constructing index...")
                 construct_index(temp_txt_dir)
-                print(f"construct_index(\"{temp_txt_dir}\") successful")
         return jsonify({'status': 'success'})
 
 
 @app.route('/query', methods=['POST'])
 def process_query():
-    print("\n/QUERY\n")
-    print(f"    temp_dir=\"{temp_dir}\"")
-    print(f"        type={type(temp_dir)}")
-    print(f"      length={len(temp_dir)}")
-    print(f"temp_txt_dir=\"{temp_txt_dir}\"")
-    print(f"        type={type(temp_txt_dir)}")
-    print(f"      length={len(temp_txt_dir)}")
     question = request.form.get("question")
     if len(temp_dir) > 0:
-        print("index present, using llama_index")
         index = GPTSimpleVectorIndex.load_from_disk('index.json')
         answer = index.query(question).response
     else:
-        print("index NOT present, using chatGPT API")
         answer = openai.Completion.create(
             engine="text-davinci-003",
             prompt=question,

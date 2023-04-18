@@ -4,6 +4,7 @@ from requests import get
 from PyPDF2 import PdfFileReader
 from os.path import basename, join
 from re import sub
+from docx import Document
 
 class FileToTXT:
 
@@ -24,6 +25,9 @@ class FileToTXT:
         elif filepath.endswith('.pdf'):
             self.text = self.parse_pdf(filepath)
             self.filename = basename(filepath)[:-4]
+        elif filepath.endswith('.docx'):
+            self.text = self.parse_docx(filepath)
+            self.filename = basename(filepath)[:-5]
 
     """Returns the text representation of the given file."""
     def __str__(self) -> str:
@@ -62,15 +66,20 @@ class FileToTXT:
 
     """Parses text from a .pdf file."""
     def parse_pdf(self, filepath: str) -> list:
-        result = []
         with open(filepath, 'rb') as file:
-            pdf_reader = PdfFileReader(file)
-            num_pages = pdf_reader.getNumPages()
-            for i in range(num_pages):
-                page = pdf_reader.getPage(i)
-                result.append(page.extractText())
-        return result
+            pdf = PdfFileReader(file)
+            n_pages = pdf.getNumPages()
+            result = []
+            for i in range(n_pages):
+                result.append(pdf.getPage(i).extractText())
+            return result
 
+    """Parses text from a .docx file."""
+    def parse_docx(self, filepath: str) -> list:
+        document = Document(filepath)
+        return [p.text for p in document.paragraphs]
+
+    """Saves the text to a .txt file in the given directory."""
     def save_to_directory(self, destination_directory: str) -> None:
         filepath = f"{join(destination_directory, self.filename)}.txt"
         with open(file=filepath, mode="w", encoding="utf-8", errors="ignore") as file:
