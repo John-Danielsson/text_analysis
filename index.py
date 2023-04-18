@@ -7,7 +7,7 @@ from llama_index import (
 )
 from langchain import OpenAI
 
-def construct_index(directory_path):
+def construct_index(directory_path) -> None:
     max_input_size = 4096
     num_outputs = 2000
     max_chunk_overlap = 20

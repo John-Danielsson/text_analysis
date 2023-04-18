@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Reader Chatbot</title>
+    <title>DataChat</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -80,7 +80,6 @@
     <script>
         const fileInput = document.getElementById('fileInput');
         const fileList = document.querySelector('.file-list');
-
         const setFileItemStatus = (listItem, status) => {
             if (status === 'processing') {
                 listItem.style.color = 'blue';
@@ -93,22 +92,17 @@
                 listItem.textContent = listItem.textContent.replace(' (processing...)', ' (error)');
             }
         };
-
         const uploadFiles = async (files) => {
             const formData = new FormData();
-
             for (const file of files) {
                 formData.append('files[]', file);
             }
-
             try {
                 const response = await fetch('/upload', {
                     method: 'POST',
                     body: formData
                 });
-
                 const result = await response.json();
-
                 for (const listItem of fileList.children) {
                     if (result.status === 'success') {
                         setFileItemStatus(listItem, 'processed');
@@ -123,50 +117,31 @@
                 }
             }
         };
-
         fileInput.addEventListener('change', (e) => {
             const files = e.target.files;
-
             for (const file of files) {
                 const listItem = document.createElement('li');
                 listItem.textContent = file.name;
                 fileList.appendChild(listItem);
                 setFileItemStatus(listItem, 'processing');
             }
-
             uploadFiles(files);
             fileInput.value = null;
         });
-
-
-
-
-
-        // Get the form and the chatbox elements
         const chatForm = document.getElementById('chat-form');
         const chatbox = document.getElementById('chatbox');
-
-        // Function to add a message to the chatbox
         function addMessageToChatbox(message, sender) {
             const messageElement = document.createElement('div');
             messageElement.className = sender === 'user' ? 'user-message' : 'bot-message';
             messageElement.innerHTML = `<p><strong>${sender === 'user' ? 'You' : 'Chatbot'}:</strong> ${message}</p>`;
             chatbox.appendChild(messageElement);
         }
-
-        // Event listener for the form submission
         chatForm.addEventListener('submit', (e) => {
             e.preventDefault();
-
-            // Get the user input and clear the input field
             const userInput = document.getElementById('user-input');
             const question = userInput.value;
             userInput.value = '';
-
-            // Add the user's message to the chatbox
             addMessageToChatbox(question, 'user');
-
-            // Send an AJAX request to the /query endpoint
             fetch('/query', {
                 method: 'POST',
                 headers: {
@@ -177,7 +152,6 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    // Add the chatbot's response to the chatbox
                     addMessageToChatbox(data.response, 'bot');
                 } else {
                     console.error(data.message);

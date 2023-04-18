@@ -2,4 +2,4 @@ test_files
 .env
 index.json
 test.py
-test_txts
+txts
