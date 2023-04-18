@@ -63,7 +63,7 @@ class IndexQuery:
 
 if __name__ == "__main__":
     pass
-    # index = IndexQuery("test_pdfs_zoltan")
+    # index = IndexQuery("test_files")
     # answer = index.ask("Write a TL;DR of Zoltan's writing.")
     # print(answer)
 

@@ -27,11 +27,11 @@ def upload():
                 file.save(file_path)
                 print(file.filename)
                 txt = FileToTXT(file_path)
-                txt.save_to_directory("test_txts")
+                txt.save_to_directory("txts")
         print("TEMP_DIR:")
         print(f"type(temp_dir)={type(temp_dir)}")
         print(f"      temp_dir={temp_dir}")
-        construct_index("test_txts")
+        construct_index("txts")
         print("index construction successful")
         # TODO: Implement a function that constructs a JSON index using the uploaded files
         #     The function takes in a directory path (str)

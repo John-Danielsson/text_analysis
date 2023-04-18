@@ -50,7 +50,7 @@ def construct_index(directory_path):
 #         display(Markdown(f"Response: <b>{response.response}</b>"))
 
 if __name__ == "__main__":
-    index = construct_index("test_pdfs_zoltan")
+    index = construct_index("test_files")
     print('construct_index() success')
     answer = index.query("Write a summary of Zoltan's writings.")
     print('    index.query() success')
