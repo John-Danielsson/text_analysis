@@ -12,7 +12,10 @@ class FileToTXT:
     based on the file extension"""
     def __init__(self, filepath: str):
         self.text = []
-        if filepath.endswith('.epub'):
+        if filepath.endswith('.txt'):
+            self.text = self.parse_txt(filepath)
+            self.filename = basename(filepath)[:-4]
+        elif filepath.endswith('.epub'):
             self.text = self.parse_epub(filepath)
             self.filename = basename(filepath)[:-5]
         elif filepath.startswith("http"):
@@ -40,7 +43,11 @@ class FileToTXT:
             return text.lower()
         return "\n".join(clean_text(x) for x in self.text)
 
-    """Parses text from a website."""
+    """Returns the text content of the given file."""
+    def text(self) -> str:
+        return self.__str__()
+
+    """Parses text from a website. The URL must go to an HTML site."""
     def parse_online_html(self, link: str) -> list:
         soup = BeautifulSoup(get(link).content, "html.parser")
         return [p.get_text() for p in soup.find_all("p")]
@@ -57,6 +64,11 @@ class FileToTXT:
     def html_to_str(html) -> str:
         bs4_html = BeautifulSoup(html, "html.parser")
         return "\n".join(p.get_text() for p in bs4_html.find_all("p"))
+
+    """Parses text from a .txt file."""
+    def parse_txt(self, filepath: str) -> list:
+        with open(file=filepath, mode="r") as file:
+            return [file.read()]
 
     """Parses text from a .epub file."""
     def parse_epub(self, filepath: str) -> list:
