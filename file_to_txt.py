@@ -49,24 +49,28 @@ class FileToTXT:
         return self.__str__()
 
     """Parses text from a website. The URL must go to an HTML site."""
-    def __parse_online_html(self, link: str) -> list:
+    @staticmethod
+    def __parse_online_html(link: str) -> list:
         soup = BeautifulSoup(get(link).content, "html.parser")
         return [p.get_text() for p in soup.find_all("p")]
 
     """Parses text from a an HTML file"""
-    def __parse_local_html(self, filepath: str) -> list:
+    @staticmethod
+    def __parse_local_html(filepath: str) -> list:
         with open(filepath, 'r') as f:
             html = f.read()
         bs4_html = BeautifulSoup(html, "html.parser")
         return [p.get_text() for p in bs4_html.find_all("p")]
 
     """Parses <p> tags from the given HTML."""
-    def __html_to_str(self, html) -> str:
+    @staticmethod
+    def __html_to_str(html) -> str:
         bs4_html = BeautifulSoup(html, "html.parser")
         return "\n".join(p.get_text() for p in bs4_html.find_all("p"))
 
     """Parses text from a .txt file."""
-    def __parse_txt(self, filepath: str) -> list:
+    @staticmethod
+    def __parse_txt(filepath: str) -> list:
         with open(file=filepath, mode="r") as file:
             return [file.read()]
 
@@ -77,7 +81,8 @@ class FileToTXT:
         return [self.__html_to_str(item.get_content()) for item in items]
 
     """Parses text from a .pdf file."""
-    def __parse_pdf(self, filepath: str) -> list:
+    @staticmethod
+    def __parse_pdf(filepath: str) -> list:
         with open(filepath, 'rb') as file:
             pdf = PdfFileReader(file)
             n_pages = pdf.getNumPages()
@@ -87,7 +92,8 @@ class FileToTXT:
             return result
 
     """Parses text from a .docx file."""
-    def __parse_docx(self, filepath: str) -> list:
+    @staticmethod
+    def __parse_docx(filepath: str) -> list:
         document = Document(filepath)
         return [p.text for p in document.paragraphs]
 
