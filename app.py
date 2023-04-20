@@ -49,19 +49,19 @@ def upload():
 @app.route('/query', methods=['POST'])
 def process_query():
     question = request.form.get("question")
-    cosine_similarity = 0.0
+    max_cosine_similarity = 0.0
     print(f"                 question={question}")
     if embeddings is not None:
         question_embedding = model.encode(sentences=[question])[0].reshape(1, -1)
-        cosine_similarity = max(cosine_similarity(X=embeddings, Y=question_embedding))
-        print(f"maximum cosine similarity={cosine_similarity}")
+        max_cosine_similarity = max(cosine_similarity(X=embeddings, Y=question_embedding))
+        print(f"maximum cosine similarity={max_cosine_similarity}")
     if index is not None:
-        if cosine_similarity > 0.2 and not question.startswith("."):
+        if max_cosine_similarity > 0.2 and not question.startswith("."):
             print("index present")
             print("question relevant to index")
             answer = index.query(question).response
     else:
-        print("index NOT present (or question NOT relevant to index)")
+        print("index NOT present OR question NOT relevant to index")
         answer = openai.Completion.create(
             engine="text-davinci-003",
             prompt=question,
