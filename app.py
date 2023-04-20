@@ -8,7 +8,6 @@ from file_to_txt import FileToTXT
 import openai
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
-from numpy import reshape, mean
 
 
 app = Flask(__name__)
