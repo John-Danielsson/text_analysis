@@ -35,6 +35,13 @@ class FileToTXT:
 
     """Returns the text representation of the given file."""
     def __str__(self) -> str:
+        return "\n".join(self.text_in_list())
+
+    """Returns the text content of the given file."""
+    def text(self) -> str:
+        return self.__str__()
+
+    def text_in_list(self) -> str:
         def clean_text(text: str) -> str:
             encoded = text.encode(encoding="utf-8", errors="ignore")
             text = encoded.decode(encoding="utf-8", errors="ignore")
@@ -42,11 +49,7 @@ class FileToTXT:
             text = sub(r'\s+', ' ', text)
             text = sub(r'[^a-zA-Z0-9\s]', '', text)
             return text.lower()
-        return "\n".join(clean_text(x) for x in self.text)
-
-    """Returns the text content of the given file."""
-    def text(self) -> str:
-        return self.__str__()
+        return [clean_text(x) for x in self.text]
 
     """Parses text from a website. The URL must go to an HTML site."""
     @staticmethod
