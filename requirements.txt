@@ -30,7 +30,7 @@ importlib-metadata==6.4.1
 itsdangerous==2.1.2
 Jinja2==3.1.2
 joblib==1.2.0
-langchain==0.0.141
+langchain==0.0.142
 lxml==4.9.2
 Markdown==3.4.3
 MarkupSafe==2.1.2

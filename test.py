@@ -1,57 +1,63 @@
+"""
+python -m streamlit run test.py
+"""
+import os
+from dotenv import load_dotenv
+import streamlit as st
+from index import construct_index
 from llama_index import (
     SimpleDirectoryReader,
-    GPTListIndex,
-    readers,
     GPTSimpleVectorIndex,
     LLMPredictor,
     PromptHelper,
     ServiceContext
 )
-from langchain import OpenAI
-import sys
-import os
-from IPython.display import Markdown, display
 
-def construct_index(directory_path):
-    max_input_size = 4096
-    num_outputs = 2000
-    max_chunk_overlap = 20
-    chunk_size_limit = 600
-    prompt_helper = PromptHelper(
-        max_input_size,
-        num_outputs,
-        max_chunk_overlap,
-        chunk_size_limit=chunk_size_limit
-    )
-    llm_predictor = LLMPredictor(
-        llm=OpenAI(
-            temperature=0.5,
-            model_name="text-davinci-003",
-            max_tokens=num_outputs
-        )
-    )
-    documents = SimpleDirectoryReader(directory_path).load_data()
-    service_context = ServiceContext.from_defaults(
-        llm_predictor=llm_predictor,
-        prompt_helper=prompt_helper
-    )
-    index = GPTSimpleVectorIndex.from_documents(
-        documents=documents,
-        service_context=service_context
-    )
-    index.save_to_disk('index.json')
-    # return index
+load_dotenv()
+os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
-# def ask_ai():
-#     index = GPTSimpleVectorIndex.load_from_disk('index.json')
-#     while True:
-#         query = input("What do you want to ask? ")
-#         response = index.query(query)
-#         display(Markdown(f"Response: <b>{response.response}</b>"))
+doc_path = './data/'
+index_file = 'index.json'
 
-if __name__ == "__main__":
-    index = construct_index("test_files")
-    print('construct_index() success')
-    answer = index.query("Write a summary of Zoltan's writings.")
-    print('    index.query() success')
-    print("answer:", answer)
+if 'response' not in st.session_state:
+    st.session_state.response = ''
+
+def send_click():
+    st.session_state.response  = index.query(st.session_state.prompt)
+
+index = None
+st.title("DataChat")
+
+sidebar_placeholder = st.sidebar.container()
+uploaded_files = st.file_uploader(
+    label="Upload files",
+    type=["pdf","epub","txt","docx","html"],
+    accept_multiple_files=True,
+)
+
+
+if len(uploaded_files) > 0:
+    print("files present:")
+    for file in uploaded_files:
+        with open(os.path.join("data", file.name), "wb") as f:
+            f.write(file.read())
+        print(f"    {file.name}")
+    index = construct_index("data")
+    print("\ndone")
+
+if index is not None:
+    st.text_input("Ask something: ", key='prompt')
+    st.button("Send", on_click=send_click)
+    if st.session_state.response:
+        st.subheader("Response: ")
+        print("st.session_state.response", st.session_state.response)
+        st.success(st.session_state.response, icon= "🤖")
+# elif os.path.exists("index.json"):
+#     index = GPTSimpleVectorIndex.load_from_disk("index.json")
+
+# if index != None:
+#     st.text_input("Ask something: ", key='prompt')
+#     st.button("Send", on_click=send_click)
+#     if st.session_state.response:
+#         st.subheader("Response: ")
+#         st.success(st.session_state.response, icon= "🤖")

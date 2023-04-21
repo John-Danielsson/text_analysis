@@ -5,15 +5,15 @@ from tempfile import TemporaryDirectory
 # from llama_index import GPTSimpleVectorIndex
 from index import construct_index
 from file_to_txt import FileToTXT
-import openai
+# import openai
 from sentence_transformers import SentenceTransformer
-from sklearn.metrics.pairwise import cosine_similarity
+# from sklearn.metrics.pairwise import cosine_similarity
 
 
 app = Flask(__name__)
 CORS(app)
 model = SentenceTransformer("paraphrase-MiniLM-L6-v2")
-embeddings = None
+# embeddings = None
 json_index = None
 
 
@@ -27,20 +27,19 @@ def index():
 def upload():
     if request.method == "POST":
         files = request.files.getlist("files[]")
-        texts = []
-        # TODO: make a feature to delete files after they've been inserted.
+        # texts = []
         with TemporaryDirectory() as temp_dir:
             # with TemporaryDirectory() as temp_txt_dir:
             for file in files:
                 file_path = join(temp_dir, file.filename)
                 file.save(file_path)
                 txt = FileToTXT(file_path)
-                texts.extend(txt.text_in_list())
+                # texts.extend(txt.text_in_list())
                 # txt.save_to_directory(temp_txt_dir)
             global json_index
             json_index = construct_index(temp_dir)
-            global embeddings
-            embeddings = model.encode(sentences=texts)[0].reshape(1, -1)
+            # global embeddings
+            # embeddings = model.encode(sentences=texts)[0].reshape(1, -1)
         # global json_index
         # json_index = GPTSimpleVectorIndex.load_from_disk("index.json")
         return jsonify({"status": "success"})
@@ -49,15 +48,18 @@ def upload():
 @app.route("/query", methods=["POST"])
 def process_query():
     question = request.form.get("question")
-    max_cosine_similarity = 0.0
-    print(f"                 question={question}")
-    if embeddings is not None:
-        q_embedding = model.encode(sentences=[question])[0].reshape(1, -1)
-        max_cosine_similarity = max(cosine_similarity(X=embeddings, Y=q_embedding))
-        print(f"maximum cosine similarity={max_cosine_similarity}")
-    answer = ""
+    print(f"\nquestion={question}")
+    # max_cosine_similarity = 0.0
+    # if embeddings is not None:
+    #     q_embedding = model.encode(sentences=[question])[0].reshape(1, -1)
+        # max_cosine_similarity = max(cosine_similarity(X=embeddings, Y=q_embedding))
+        # print(f"maximum cosine similarity={max_cosine_similarity}")
+    # answer = ""
     print(f"json_index={json_index}")
     answer = json_index.query(question).response
+    # I may work on this code below at a later date. It's intended to switch between asking questions
+    # of the provided files and asking questions of the generic ChatGPT API, and distinguish
+    # between the user's questions appropriately.
     # if json_index is not None and max_cosine_similarity > 0.12 and not question.startswith("."):
     #     print("json_index present")
     #     print("question relevant to json_index")
