@@ -8,7 +8,6 @@ from docx import Document
 
 
 class FileToTXT:
-
     """Initializes the FileParser and calculates the text output
     based on the file extension"""
     def __init__(self, filepath: str):
@@ -41,7 +40,7 @@ class FileToTXT:
     def text(self) -> str:
         return self.__str__()
 
-    def text_in_list(self) -> str:
+    def text_in_list(self) -> list[str]:
         def clean_text(text: str) -> str:
             encoded = text.encode(encoding="utf-8", errors="ignore")
             text = encoded.decode(encoding="utf-8", errors="ignore")

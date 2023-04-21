@@ -7,7 +7,7 @@ from llama_index import (
 )
 from langchain import OpenAI
 
-def construct_index(directory_path) -> None:
+def construct_index(directory_path):
     max_input_size = 4096
     num_outputs = 2000
     max_chunk_overlap = 20
@@ -34,4 +34,6 @@ def construct_index(directory_path) -> None:
         documents=documents,
         service_context=service_context
     )
+    print(f"type(index)={type(index)}")
     index.save_to_disk('index.json')
+    return index
