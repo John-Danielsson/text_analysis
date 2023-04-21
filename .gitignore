@@ -2,5 +2,6 @@ test_files
 .env
 data
 index.json
+index_query.py
 test.py
 txts
