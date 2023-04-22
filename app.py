@@ -3,12 +3,10 @@ from flask_cors import CORS
 from os.path import join
 from tempfile import TemporaryDirectory
 from index import construct_index
-from sentence_transformers import SentenceTransformer
 
 
 app = Flask(__name__)
 CORS(app)
-model = SentenceTransformer("paraphrase-MiniLM-L6-v2")
 json_index = None
 
 
@@ -26,9 +24,12 @@ def upload():
             for file in files:
                 file_path = join(temp_dir, file.filename)
                 file.save(file_path)
-                txt = FileToTXT(file_path)
             global json_index
-            json_index = construct_index(temp_dir)
+            json_index = construct_index(
+                directory_path=temp_dir,
+                model="gpt-3.5-turbo",
+                temperature=0.5
+            )
         return jsonify({"status": "success"})
 
 
@@ -36,9 +37,9 @@ def upload():
 def process_query():
     question = request.form.get("question")
     print(f"\nquestion={question}")
-    print(f"json_index={json_index}")
+    print(f"\njson_index={json_index}")
     answer = json_index.query(question).response
-    print(f"answer=\"{answer}\"")
+    print(f"\nanswer=\"{answer}\"")
     return jsonify({"status": "success", "response": answer})
 
 

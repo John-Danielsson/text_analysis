@@ -6,8 +6,16 @@ from llama_index import (
     ServiceContext
 )
 from langchain import OpenAI
+from langchain.chat_models import ChatOpenAI
+from dotenv import load_dotenv
+import os
 
-def construct_index(directory_path):
+
+load_dotenv()
+os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
+
+
+def construct_index(directory_path: str, model: str, temperature: int):
     max_input_size = 4096
     num_outputs = 2000
     max_chunk_overlap = 20
@@ -19,9 +27,9 @@ def construct_index(directory_path):
         chunk_size_limit=chunk_size_limit
     )
     llm_predictor = LLMPredictor(
-        llm=OpenAI(
-            temperature=0.5,
-            model_name="text-davinci-003",
+        llm=ChatOpenAI(
+            temperature=temperature,
+            model_name=model,
             max_tokens=num_outputs
         )
     )
