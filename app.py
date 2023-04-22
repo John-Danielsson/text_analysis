@@ -3,7 +3,6 @@ from flask_cors import CORS
 from os.path import join
 from tempfile import TemporaryDirectory
 from index import construct_index
-from file_to_txt import FileToTXT
 from sentence_transformers import SentenceTransformer
 
 
