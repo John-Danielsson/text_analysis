@@ -5,8 +5,8 @@ from llama_index import (
     PromptHelper,
     ServiceContext
 )
-from langchain import OpenAI
 from langchain.chat_models import ChatOpenAI
+from langchain import OpenAI
 from dotenv import load_dotenv
 import os
 
@@ -26,12 +26,21 @@ def construct_index(directory_path: str, model: str, temperature: float):
         max_chunk_overlap,
         chunk_size_limit=chunk_size_limit
     )
-    llm_predictor = LLMPredictor(
-        llm=ChatOpenAI(
+    llm = None
+    if model == "text-davinci-003":
+        llm = llm=OpenAI(
             temperature=temperature,
             model_name=model,
             max_tokens=num_outputs
         )
+    else:
+        llm = ChatOpenAI(
+            temperature=temperature,
+            model_name=model,
+            max_tokens=num_outputs
+        )
+    llm_predictor = LLMPredictor(
+        llm=llm
     )
     documents = SimpleDirectoryReader(directory_path).load_data()
     service_context = ServiceContext.from_defaults(
