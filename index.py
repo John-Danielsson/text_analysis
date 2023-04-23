@@ -15,7 +15,7 @@ load_dotenv()
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
 
-def construct_index(directory_path: str, model: str, temperature: int):
+def construct_index(directory_path: str, model: str, temperature: float):
     max_input_size = 4096
     num_outputs = 2000
     max_chunk_overlap = 20

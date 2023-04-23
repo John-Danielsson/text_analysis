@@ -1,6 +1,6 @@
 # CHAT LOGS
 
-## 1 (Amazon, Apple, and Lockheed Annual Reports, plus Zoltan)
+## 1 (Amazon, Apple, and Lockheed Annual Reports, plus Zoltan articles, 334 pages total)
 
 You: What overlap, if any, exists between the Zoltan articles and the company Annual Reports?
 

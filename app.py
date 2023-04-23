@@ -3,6 +3,7 @@ from flask_cors import CORS
 from os.path import join
 from tempfile import TemporaryDirectory
 from index import construct_index
+import openai
 
 
 app = Flask(__name__)
@@ -25,6 +26,7 @@ def upload():
                 file_path = join(temp_dir, file.filename)
                 file.save(file_path)
             global json_index
+            print(openai.Billing.retrieve())
             json_index = construct_index(
                 directory_path=temp_dir,
                 model="gpt-3.5-turbo",
