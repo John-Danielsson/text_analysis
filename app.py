@@ -3,6 +3,7 @@ from flask_cors import CORS
 from os.path import join
 from tempfile import TemporaryDirectory
 from index import construct_index
+from file_parser import FileParser
 
 
 app = Flask(__name__)
@@ -22,10 +23,15 @@ def index():
 def upload():
     if request.method == "POST":
         files = request.files.getlist("files[]")
+        # texts = []
         with TemporaryDirectory() as temp_dir:
             for file in files:
                 file_path = join(temp_dir, file.filename)
                 file.save(file_path)
+                # txt = FileParser(file_path)
+                # texts.append(f"BEGIN {txt.filename}")
+                # texts.extend(txt.text)
+                # texts.append(f"END {txt.filename}")
             global json_index
             # json_index = GPTSimpleVectorIndex.load_from_disk("index.json")
             json_index = construct_index(
