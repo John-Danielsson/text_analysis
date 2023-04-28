@@ -2,5 +2,7 @@ data
 extras
 index
 test_files
+venv
 .env
 index.json
+test.py
