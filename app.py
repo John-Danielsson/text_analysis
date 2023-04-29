@@ -5,7 +5,7 @@ import os
 from tempfile import TemporaryDirectory
 from index import construct_index
 from file_parser import FileParser
-
+from llama_index import GPTVectorStoreIndex, SimpleDirectoryReader
 
 app = Flask(__name__)
 CORS(app)
@@ -80,12 +80,14 @@ def upload():
                     # # texts.extend(txt.text)
                     # # texts.append(f"END {txt.filename}")
                 global json_index
-                # json_index = GPTSimpleVectorIndex.load_from_disk("index.json")
-                json_index = construct_index(
-                    directory_path=txt_dir,
-                    model=turbo,
-                    temperature=0.5
-                )
+                # # json_index = GPTSimpleVectorIndex.load_from_disk("index.json")
+                # json_index = construct_index(
+                #     directory_path=txt_dir,
+                #     model=turbo,
+                #     temperature=0.5
+                # )
+                documents = SimpleDirectoryReader(txt_dir).load_data()
+                json_index = GPTVectorStoreIndex.from_documents(documents)
                 print("index construction success")
         return jsonify({"status": "success"})
 
