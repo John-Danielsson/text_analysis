@@ -1,9 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 from os.path import join
-import os
 from tempfile import TemporaryDirectory
-from index import construct_index
 from file_parser import FileParser
 from llama_index import GPTVectorStoreIndex, SimpleDirectoryReader
 
@@ -70,22 +68,7 @@ def upload():
                     txt_file_text += prompt_engineer(file_parser, i+1)
                 with open(file=join(txt_dir, "data.txt"), mode="w", errors="ignore") as f:
                     f.write(txt_file_text)
-                # with open(file=join(txt_dir, "data.txt"), mode="r", errors="ignore") as f:
-                #     print(f"\n\n\n\n\ntxt file text:\n{f.read()}")
-                # print("\n\nfor file in os.listdir(txt_dir):")
-                # for file in os.listdir(txt_dir):
-                #     print(f"    {file}")
-                # print(txt_file_text)
-                    # # texts.append(f"BEGIN {txt.filename}")
-                    # # texts.extend(txt.text)
-                    # # texts.append(f"END {txt.filename}")
                 global json_index
-                # # json_index = GPTSimpleVectorIndex.load_from_disk("index.json")
-                # json_index = construct_index(
-                #     directory_path=txt_dir,
-                #     model=turbo,
-                #     temperature=0.5
-                # )
                 documents = SimpleDirectoryReader(txt_dir).load_data()
                 json_index = GPTVectorStoreIndex.from_documents(documents)
                 print("index construction success")
@@ -97,6 +80,7 @@ def process_query():
     question = request.form.get("question")
     print(f"\nquestion=\"{question}\"")
     print(f"\njson_index={json_index}")
+    print("processing answer...")
     answer = json_index.query(question).response
     print(f"\nanswer=\"{answer}\"")
     return jsonify({"status": "success", "response": answer})
