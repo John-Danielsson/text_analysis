@@ -6,8 +6,8 @@ Data size: 9.2 MB
 Start time: ~09:13 PST
 Start total exp: $14.15
 Tokens processed: 465404 tokens
-Total expenditure after processing: $
-Token processing cost: $
+Total expenditure after processing: $14.86
+Token processing cost: $0.71
 Token processing time: ~1 minute
 
 **You:** What are common themes between the annual reports?
