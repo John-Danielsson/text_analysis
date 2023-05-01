@@ -4,6 +4,7 @@ from os.path import join
 from tempfile import TemporaryDirectory
 from file_parser import FileParser
 from llama_index import GPTVectorStoreIndex, SimpleDirectoryReader
+from prompt_engineer import primer_str, prompt_engineer_str
 
 app = Flask(__name__)
 CORS(app)
@@ -14,36 +15,11 @@ gpt4 = "gpt-4"
 
 
 def primer(n_files: int) -> str:
-    return f"""
-All of the text after the 10 consecutive asterisks consists of text
-extracted from {n_files} files in .pdf, .txt, .html, .docx, or .epub format.
-The text of each file is formatted as follows:
-
-==========
-BEGIN FILE (file number)
-File Name: (file name)
-File Content:
-(text of file)
-END FILE (file number)
-==========
-
-**********
-
-"""
+    return primer_str.format(n_files)
 
 
-def prompt_engineer(file_parser: FileParser, i: int) -> str:
-    return f"""
-
-==========
-BEGIN FILE {i}
-File Name: {file_parser.filename}
-File Content:
-{str(file_parser)}
-END FILE {i}
-==========
-
-"""
+def prompt_engineer(file: FileParser, i: int) -> str:
+    return prompt_engineer_str.format(i, file.filename, str(file), i)
 
 
 @app.route("/")
