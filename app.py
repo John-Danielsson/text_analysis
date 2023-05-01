@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
-from os.path import join
+from os.path import join, exists as path_exists
 from tempfile import TemporaryDirectory
 from file_parser import FileParser
 from llama_index import GPTVectorStoreIndex, SimpleDirectoryReader
@@ -57,8 +57,13 @@ def process_query():
     print(f"\nquestion=\"{question}\"")
     print(f"\njson_index={json_index}")
     print("processing answer...")
-    answer = json_index.query(question).response
-    print(f"\nanswer=\"{answer}\"")
+    try:
+        answer = json_index.query(question).response
+        print(f"\nanswer=\"{answer}\"")
+    except:
+        print("files not in index, alerting user")
+        message = "There are no files. Please upload at least 1 file to ask questions."
+        return jsonify({"status": "success", "response": message})
     return jsonify({"status": "success", "response": answer})
 
 
