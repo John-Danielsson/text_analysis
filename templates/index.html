@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DataChat</title>
+    <title></title>
     <style>
         html {
             height: 100%;
@@ -15,7 +15,7 @@
             align-items: center;
             margin: 0;
             padding: 0;
-            height: 90%;
+            height: 95%;
             width: 100%;
         }
         .container {
@@ -28,16 +28,19 @@
             width: 100%;
         }
         .header {
+            background-color: #3b30ff;
+            color: #ffffff;
+            font-family: Impact, sans-serif;
             text-align: center;
             font-size: 2rem;
-            margin-bottom: 1rem;
+<!--            margin: 1rem;-->
         }
         .content {
             display: flex;
             height: 100%;
         }
         .chatbot {
-            width: 60%;
+            width: 70%;
             background-color: #f6f6f6;
             padding: 1rem;
             display: flex;
@@ -89,7 +92,7 @@
         #chat-form button {
             border-radius: 5px;
             padding: 10px;
-            background-color: #4CAF50;
+            background-color: #3b30ff;
             color: white;
             border: none;
             flex-grow: 1;
@@ -101,7 +104,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">DataChat</div>
+        <div class="header"></div>
         <div class="content">
             <div class="chatbot">
                 <div class="chat-content">
@@ -110,7 +113,7 @@
                     </div>
                 </div>
                 <form id="chat-form">
-                    <textarea id="user-input" placeholder="Ask a question" autocomplete="off" required rows="4" cols="40"></textarea>
+                    <textarea id="user-input" placeholder="Ask a question..." autocomplete="off" required rows="4" cols="40"></textarea>
                     <button type="submit">Ask</button>
                 </form>
             </div>
@@ -122,6 +125,11 @@
         </div>
     </div>
     <script>
+        var appName = "WordChat";
+        document.querySelector(".header").innerHTML = appName;
+        document.querySelector("title").innerHTML = appName;
+
+
         const fileInput = document.getElementById('fileInput');
         const fileList = document.querySelector('.file-list');
         const setFileItemStatus = (listItem, status) => {
@@ -172,6 +180,8 @@
             uploadFiles(files);
             fileInput.value = null;
         });
+
+
         const chatForm = document.getElementById('chat-form');
         const chatbox = document.getElementById('chatbox');
         function addMessageToChatbox(message, sender) {
