@@ -16,7 +16,9 @@
 
 <img src="./images/run_link.png" height="auto">
 
-6) Upload files and answer questions as desired.
+6) Upload files and answer questions as desired. This is what the app should look like:
+
+<img src="./images/running_app.png" height="auto">
 
 7) When you want to stop the app, you can either click the red square (just to the left of the green arrow) or close PyCharm.
 
