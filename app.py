@@ -12,7 +12,6 @@ from werkzeug.utils import secure_filename
 from file_parser import FileParser
 from llama_index import GPTVectorStoreIndex, SimpleDirectoryReader
 from prompt_engineer import primer_str, prompt_engineer_str
-from index import construct_index
 
 
 app = Flask(__name__)
