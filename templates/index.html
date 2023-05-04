@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>WORDCHAT</title>
     <style>
         html {
             height: 100%;
@@ -33,7 +33,31 @@
             font-family: Impact, sans-serif;
             text-align: center;
             font-size: 2rem;
-<!--            margin: 1rem;-->
+            position: relative;
+        }
+        .header h1 {
+            font-size: 7vh;
+        }
+        .header p {
+            font-size: 3vh;
+            font-style: italic;
+        }
+        .header h1, p {
+            margin: 0.5rem;
+        }
+        #shutdown-btn {
+            background-color: #ff4b0a;
+            color: #ffffff;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        #how-to-use-btn {
+            background-color: #11cc00;
+            color: #ffffff;
+            position: absolute;
+            top: 10px;
+            left: 10px;
         }
         .content {
             display: flex;
@@ -104,8 +128,13 @@
 </head>
 <body>
     <div class="container">
-        <div class="header"></div>
+        <div class="header">
+            <h1>WORDCHAT</h1>
+            <p>Accepts PDF, DOC, DOCX, EPUB, TXT, and HTML files.</p>
+        </div>
         <div class="content">
+            <button id="shutdown-btn">Quit App</button>
+            <button id="how-to-use-btn">How to use</button>
             <div class="chatbot">
                 <div class="chat-content">
                     <div id="chatbox">
@@ -125,9 +154,10 @@
         </div>
     </div>
     <script>
-        var appName = "WordChat";
-        document.querySelector(".header").innerHTML = appName;
-        document.querySelector("title").innerHTML = appName;
+        function showHowToUse() {
+            alert("How to use WORDCHAT:\n\n1. Drag and drop or click to upload your files (PDF, DOC, DOCX, EPUB, TXT, or HTML).\n2. Wait for the files to be processed.\n3. Type your question(s) in the textarea and click \"Ask\" to get a response from the chatbot.\n4. Click \"Quit App\" to shut down the server when you're done.");
+        }
+        document.getElementById("how-to-use-btn").addEventListener("click", showHowToUse);
 
 
         const fileInput = document.getElementById('fileInput');
@@ -215,6 +245,22 @@
             .catch(error => {
                 console.error(error);
                 addMessageToChatbox('An error occurred. Please try again.', 'bot');
+            });
+        });
+
+
+        document.getElementById("shutdown-btn").addEventListener("click", function() {
+            fetch('/shutdown', { method: 'POST' })
+            .then(response => {
+                if (response.ok) {
+                    alert('Server is shutting down. You can now close this window/tab.');
+                } else {
+                    alert('Error shutting down the server. Please try again or close the server manually.');
+                }
+            })
+            .catch(error => {
+                console.error('Error shutting down the server:', error);
+                alert('Error shutting down the server. Please try again or close the server manually.');
             });
         });
     </script>

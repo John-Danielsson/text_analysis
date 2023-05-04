@@ -1,4 +1,6 @@
 from os.path import join
+from os import kill, getpid
+import signal
 from tempfile import TemporaryDirectory
 
 from flask import Flask, render_template, request, jsonify
@@ -85,6 +87,19 @@ def request_entity_too_large(error):
     response = jsonify({"status": "error", "message": "Too much content uploaded. Maximum allowed size is 500MB."})
     response.status_code = 413
     return response
+
+
+def shutdown_server() -> None:
+    """Shuts down the app from the user's click."""
+    kill(getpid(), signal.SIGTERM)
+
+
+@app.route("/shutdown", methods=["POST"])
+def shutdown() -> str:
+    """Handles shutting down the app from the user's click."""
+    shutdown_server()
+    print("Server shutting down...")
+    return "Server shutting down..."
 
 
 if __name__ == "__main__":
