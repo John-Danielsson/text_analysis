@@ -6,6 +6,8 @@
 
 **Chatbot:** There are no files. Please upload at least 1 file to ask questions.
 
+[upload Zoltan 1]
+
 **You:** Who is the author of the article?
 
 **Chatbot:** The author of the article is Zoltan Pozsar, who draws on the experiences of macro investors such as George Soros, Stanley Druckenmiller, Paul Tudor Jones, Louis Bacon, and John Maynard Keynes.
