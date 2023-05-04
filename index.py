@@ -6,8 +6,6 @@ from llama_index import (
     ServiceContext
 )
 from langchain.chat_models import ChatOpenAI
-from langchain.llms import OpenAI
-# from langchain import OpenAI
 from dotenv import load_dotenv
 import os
 
@@ -17,41 +15,16 @@ os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
 
 def construct_index(directory_path: str, model: str, temperature: float):
-    max_input_size = 4096
-    num_outputs = 2000
-    max_chunk_overlap = 20
-    chunk_size_limit = 600
-    prompt_helper = PromptHelper(
-        max_input_size,
-        num_outputs,
-        max_chunk_overlap,
-        chunk_size_limit=chunk_size_limit
-    )
-    llm = llm = OpenAI(
-        temperature=temperature,
-        model_name=model,
-        max_tokens=num_outputs
-    )
-    # llm = None
-    # if model == "text-davinci-003":
-    #     llm = llm=OpenAI(
-    #         temperature=temperature,
-    #         model_name=model,
-    #         max_tokens=num_outputs
-    #     )
-    # else:
-    #     llm = ChatOpenAI(
-    #         temperature=temperature,
-    #         model_name=model,
-    #         max_tokens=num_outputs
-    #     )
-    llm_predictor = LLMPredictor(
-        llm=llm
-    )
     documents = SimpleDirectoryReader(directory_path).load_data()
+    llm_predictor = LLMPredictor(
+        llm=ChatOpenAI(
+            temperature=temperature,
+            model_name=model
+        )
+    )
     service_context = ServiceContext.from_defaults(
         llm_predictor=llm_predictor,
-        prompt_helper=prompt_helper
+        chunk_size_limit=512
     )
     index = GPTSimpleVectorIndex.from_documents(
         documents=documents,
