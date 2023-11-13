@@ -70,9 +70,9 @@ jsonschema==4.17.3
 jupyter_client==8.3.0
 jupyter_core==5.3.1
 kiwisolver==1.4.4
-langchain==0.0.331
+langchain==0.0.335
 langchainplus-sdk==0.0.20
-langsmith==0.0.54
+langsmith==0.0.63
 layoutparser==0.3.4
 llama-index==0.7.2
 loguru==0.7.0
