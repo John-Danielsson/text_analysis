@@ -9,12 +9,32 @@ from langchain.chat_models import ChatOpenAI
 from dotenv import load_dotenv
 import os
 
-
 load_dotenv()
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
-
 def construct_index(directory_path: str, model: str, temperature: float):
+    """
+    Constructs an index from documents in a specified directory using a language model.
+
+    This function reads documents from the given directory, initializes a language model
+    predictor with specified parameters, and constructs an index for the documents using
+    the language model. The index is then saved to disk.
+
+    Parameters:
+    ----------
+    directory_path : str
+        The path to the directory containing the documents to be indexed.
+    model : str
+        The name of the language model to be used for indexing.
+    temperature : float
+        The temperature setting for the language model, controlling the randomness
+        of the model's responses.
+
+    Returns:
+    -------
+    GPTSimpleVectorIndex
+        The constructed index object for the given documents.
+    """
     documents = SimpleDirectoryReader(directory_path).load_data()
     llm_predictor = LLMPredictor(
         llm=ChatOpenAI(

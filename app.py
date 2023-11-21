@@ -23,25 +23,65 @@ gpt4 = "gpt-4"
 
 
 def primer(n_files: int) -> str:
-    """Returns the beginning of the prompt-engineered version of the file(s)."""
+    """
+    Generates a primer string for prompt engineering based on the number of files.
+
+    Parameters:
+    ----------
+    n_files : int
+        The number of files to be processed.
+
+    Returns:
+    -------
+    str
+        A formatted string serving as the beginning of a prompt-engineered file.
+    """
     return primer_str.format(n_files)
 
 
 def prompt_engineer(file: FileParser, i: int) -> str:
-    """Returns a prompt-engineered version of the file."""
+    """
+    Generates a prompt-engineered version of the file's content.
+
+    Parameters:
+    ----------
+    file : FileParser
+        The FileParser object containing the file's content.
+    i : int
+        The index of the file in the list of files.
+
+    Returns:
+    -------
+    str
+        A prompt-engineered string representation of the file's content.
+    """
     return prompt_engineer_str.format(i, file.filename, str(file), i)
 
 
 @app.route("/")
 def index():
-    """Displays the app's HTML/CSS/JS."""
+    """
+    Route to display the main page of the application.
+
+    Returns:
+    -------
+    render_template
+        The rendered HTML template for the index page.
+    """
     print(f"json_index={json_index}")
     return render_template("index.html")
 
 
 @app.route("/upload", methods=["POST"])
 def upload():
-    """Handles files uploads in PDF, HTML, EPUB, DOC, DOCX, and TXT."""
+    """
+    Route to handle the uploading of files. Supports PDF, HTML, EPUB, DOC, DOCX, and TXT formats.
+
+    Returns:
+    -------
+    jsonify
+        A JSON response indicating the status of the upload process.
+    """
     if request.method == "POST":
         files = request.files.getlist("files[]")
         print(f"number of files={len(files)}")
@@ -66,8 +106,14 @@ def upload():
 
 @app.route("/query", methods=["POST"])
 def process_query():
-    """Handles user questions over the files uploaded. If no files have been,
-    uploaded, the app simply indicates that no files have been uploaded yet."""
+    """
+    Route to process user queries and return answers based on the uploaded files' content.
+
+    Returns:
+    -------
+    jsonify
+        A JSON response containing the status and the answer to the user's query.
+    """
     question = request.form.get("question")
     print(f"\nquestion=\"{question}\"")
     print(f"\njson_index={json_index}")
@@ -86,20 +132,41 @@ app.config['MAX_CONTENT_LENGTH'] = 500 * 1024 * 1024
 
 @app.errorhandler(413)
 def request_entity_too_large(error):
-    """Handles excessively large files."""
+    """
+    Error handler for 'Request Entity Too Large' (413) error.
+
+    Parameters:
+    ----------
+    error : werkzeug.exceptions.RequestEntityTooLarge
+        The exception object for the error.
+
+    Returns:
+    -------
+    response : jsonify
+        A JSON response indicating that the uploaded content exceeded the size limit.
+    """
     response = jsonify({"status": "error", "message": "Too much content uploaded. Maximum allowed size is 500MB."})
     response.status_code = 413
     return response
 
 
 def shutdown_server() -> None:
-    """Shuts down the app from the user's click."""
+    """
+    Shuts down the Flask server from within the application.
+    """
     kill(getpid(), signal.SIGTERM)
 
 
 @app.route("/shutdown", methods=["POST"])
 def shutdown() -> str:
-    """Handles shutting down the app from the user's click."""
+    """
+    Route to handle the shutdown of the Flask server from the user's request.
+
+    Returns:
+    -------
+    str
+        A string message indicating the server shutdown process.
+    """
     shutdown_server()
     print("Server shutting down...")
     return "Server shutting down..."
