@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Meta tags for character set and responsiveness -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WORDCHAT</title>
+
+    <!-- Inline CSS for styling -->
     <style>
         html {
             height: 100%;
@@ -129,42 +132,61 @@
     </style>
 </head>
 <body>
+    <!-- Main container for the app -->
     <div class="container">
+        <!-- Header section with title and instructions -->
         <div class="header">
             <h1>WORDCHAT</h1>
             <p>Accepts PDF, DOC, DOCX, EPUB, TXT, and HTML files. Works best with 1 file, or similar files (no more than 300 pages total).</p>
         </div>
+
+        <!-- Content section for chatbot and file upload -->
         <div class="content">
+            <!-- Buttons for quitting the app and showing usage instructions -->
             <button id="shutdown-btn">Quit App</button>
             <button id="how-to-use-btn">How to use</button>
+
+            <!-- Chatbot section -->
             <div class="chatbot">
+                <!-- Chat content displayed here -->
                 <div class="chat-content">
                     <div id="chatbox">
                         <!-- Chat messages are appended here -->
                     </div>
                 </div>
+
+                <!-- Form for user input -->
                 <form id="chat-form">
                     <textarea id="user-input" placeholder="Ask a question..." autocomplete="off" required rows="4" cols="40"></textarea>
                     <button type="submit">Ask</button>
                 </form>
             </div>
+
+            <!-- File upload section -->
             <div class="file-drop">
                 <input type="file" id="fileInput" multiple accept=".pdf,.epub,.txt,.docx,.html">
                 <label for="fileInput">Drop files here or click to upload</label>
+                <!-- List of uploaded files -->
                 <ul class="file-list"></ul>
             </div>
         </div>
     </div>
+
     <script>
+        // Function to display instructions on how to use the app
         function showHowToUse() {
             alert("How to use WORDCHAT:\n\n1. Drag and drop or click to upload your files (PDF, DOC, DOCX, EPUB, TXT, or HTML).\n2. Wait for the files to be processed.\n3. Type your question(s) in the textarea and click \"Ask\" to get a response from the chatbot.\n4. Click \"Quit App\" to shut down the server when you're done.\n\nThis is just the beginning of training chatbots on personal files. The technology is getting better by the day.");
         }
+        // Adding event listener to 'How to use' button
         document.getElementById("how-to-use-btn").addEventListener("click", showHowToUse);
-
-
+    
+        // DOM elements for file input and file list
         const fileInput = document.getElementById('fileInput');
         const fileList = document.querySelector('.file-list');
+    
+        // Function to update the status of a file item in the list
         const setFileItemStatus = (listItem, status) => {
+            // Switch color and text based on file processing status
             if (status === 'processing') {
                 listItem.style.color = 'blue';
                 listItem.textContent += ' (processing...)';
@@ -176,23 +198,23 @@
                 listItem.textContent = listItem.textContent.replace(' (processing...)', ' (error)');
             }
         };
+    
+        // Async function to handle file uploads
         const uploadFiles = async (files) => {
             const formData = new FormData();
             for (const file of files) {
                 formData.append('files[]', file);
             }
             try {
+                // Making POST request to /upload endpoint with the files
                 const response = await fetch('/upload', {
                     method: 'POST',
                     body: formData
                 });
                 const result = await response.json();
+                // Update file list based on the upload result
                 for (const listItem of fileList.children) {
-                    if (result.status === 'success') {
-                        setFileItemStatus(listItem, 'processed');
-                    } else {
-                        setFileItemStatus(listItem, 'error');
-                    }
+                    setFileItemStatus(listItem, result.status === 'success' ? 'processed' : 'error');
                 }
             } catch (error) {
                 console.error('Error uploading the file:', error);
@@ -201,8 +223,11 @@
                 }
             }
         };
+    
+        // Event listener for file input change
         fileInput.addEventListener('change', (e) => {
             const files = e.target.files;
+            // Display each file in the list and start processing
             for (const file of files) {
                 const listItem = document.createElement('li');
                 listItem.textContent = file.name;
@@ -210,24 +235,30 @@
                 setFileItemStatus(listItem, 'processing');
             }
             uploadFiles(files);
-            fileInput.value = null;
+            fileInput.value = ''; // Reset the file input
         });
-
-
+    
+        // DOM elements for chat form and chatbox
         const chatForm = document.getElementById('chat-form');
         const chatbox = document.getElementById('chatbox');
+    
+        // Function to add a message to the chatbox
         function addMessageToChatbox(message, sender) {
             const messageElement = document.createElement('div');
             messageElement.className = sender === 'user' ? 'user-message' : 'bot-message';
             messageElement.innerHTML = `<p><strong>${sender === 'user' ? 'You' : 'Chatbot'}:</strong> ${message}</p>`;
             chatbox.appendChild(messageElement);
         }
+    
+        // Event listener for submitting the chat form
         chatForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const userInput = document.getElementById('user-input');
             const question = userInput.value;
-            userInput.value = '';
-            addMessageToChatbox(question, 'user');
+            userInput.value = ''; // Clear the input field
+            addMessageToChatbox(question, 'user'); // Add user's question to chatbox
+    
+            // Fetching response to the question from the /query endpoint
             fetch('/query', {
                 method: 'POST',
                 headers: {
@@ -237,6 +268,7 @@
             })
             .then(response => response.json())
             .then(data => {
+                // Display the chatbot's response in the chatbox
                 if (data.status === 'success') {
                     addMessageToChatbox(data.response, 'bot');
                 } else {
@@ -249,9 +281,10 @@
                 addMessageToChatbox('An error occurred. Please try again.', 'bot');
             });
         });
-
-
+    
+        // Event listener for the shutdown button
         document.getElementById("shutdown-btn").addEventListener("click", function() {
+            // Fetch request to shut down the server
             fetch('/shutdown', { method: 'POST' })
             .then(response => {
                 if (response.ok) {
@@ -266,5 +299,6 @@
             });
         });
     </script>
+
 </body>
 </html>
